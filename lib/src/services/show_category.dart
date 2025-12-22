@@ -10,6 +10,7 @@ class ShowCategoryNews{
   List<ShowCategoryModel> categories = [];
 
   Future<void> getcategoriesNews(String category)async{
+    categories.clear();
     String url = "https://newsapi.org/v2/top-headlines?country=us&category=$category&apiKey=51806c24c6074abfa4856291adbdc56e";
     var response = await http.get(Uri.parse(url));
 
@@ -27,7 +28,8 @@ class ShowCategoryNews{
               urlToImage: element["urlToImage"]
 
           );
-          categories.add(ShowCategoryModel());
+          categories.add(categoryModel);
+
         }
       });
     }

@@ -9,10 +9,13 @@ import 'package:newapp/src/screens/Home/category_tile.dart';
 import 'package:newapp/src/screens/Slider/slider_screen.dart';
 import 'package:newapp/src/services/data.dart';
 import 'package:newapp/src/services/news.dart';
+import 'package:newapp/src/services/show_category.dart';
 import 'package:newapp/src/services/slider_data.dart';
 import 'package:newapp/src/utils/app_assets.dart';
 import 'package:newapp/src/utils/app_color.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
+import 'blog_tile.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -27,6 +30,9 @@ class _HomeScreenState extends State<HomeScreen> {
   List<ArticleModel> articles = [];
   bool _loading = true;
   int activeIndex = 0;
+  bool _newsLoading = true;
+  bool _sliderLoading = true;
+
 
   @override
   void initState() {
@@ -40,10 +46,12 @@ class _HomeScreenState extends State<HomeScreen> {
     News newsClass = News();
     await newsClass.getNews();
     articles = newsClass.news;
+
     setState(() {
-      _loading = false;
+      _newsLoading = false;
     });
   }
+
 
   getSlider()async {
     Sliders slider = Sliders();
@@ -53,6 +61,10 @@ class _HomeScreenState extends State<HomeScreen> {
       _loading = false;
     });
   }
+  // getCategories()async{
+  //   ShowCategoryNews showCategoryNews = ShowCategoryNews();
+  //   await showCategoryNews.getcategoriesNews(category)
+  // }
 
   @override
   Widget build(BuildContext context) {

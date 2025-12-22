@@ -34,7 +34,7 @@ class _LandingScreenState extends State<LandingScreen> {
             ),
             SizedBox(height: 20),
             Text(
-              "News from around the\n      world for you",
+              "News from around the\n          world for you",
               style: GoogleFonts.poppins(
                 color: Colors.black,
                 fontSize: 20,

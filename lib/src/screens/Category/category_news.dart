@@ -1,50 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:newapp/src/utils/app_color.dart';
 
-import '../../utils/app_color.dart';
+import '../../model/show_category.dart';
+import '../../services/show_category.dart';
+import '../Home/blog_tile.dart';
 
-class CategoryScreen extends StatefulWidget {
-  String blogUrl;
-  CategoryScreen({required this.blogUrl});
+class CategoryNews extends StatefulWidget {
+  final String name;
+
+  CategoryNews({required this.name});
 
   @override
-  State<CategoryScreen> createState() => _CategoryScreenState();
+  State<CategoryNews> createState() => _CategoryNewsState();
 }
 
-class _CategoryScreenState extends State<CategoryScreen> {
-
-  final controller = WebViewController();
+class _CategoryNewsState extends State<CategoryNews> {
+  List<ShowCategoryModel> categories = [];
+  bool _loading = true;
 
   @override
   void initState() {
     super.initState();
-    controller.setJavaScriptMode(JavaScriptMode.unrestricted);
-    controller.loadRequest(Uri.parse(widget.blogUrl));
+    getNews();
+  }
+
+  getNews() async {
+    ShowCategoryNews service = ShowCategoryNews();
+    await service.getcategoriesNews(widget.name);
+    categories = service.categories;
+
+    setState(() {
+      _loading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: Row(
-            mainAxisAlignment: .center,
-            children: [
-              Text('Flutter'),
-              Text(
-                'News',
-                style: GoogleFonts.poppins(
-                  fontWeight: .bold,
-                  color: AppColors.primaryRed,
-                ),
-              ),
-            ],
-          ),
+      appBar: AppBar(
+        title: Text(
+          widget.name.toUpperCase(),
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold,color: AppColors.primaryRed),
         ),
-        body:Container(
-          child:WebViewWidget(controller: controller),
-        )
+        centerTitle: true,
+      ),
+      body: _loading
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+        itemCount: categories.length,
+        itemBuilder: (context, index) {
+          final news = categories[index];
+          return BlogTile(
+            title: news.title ?? "",
+            desc: news.description ?? "",
+            imageUrl: news.urlToImage ?? "",
+            url: news.url ?? "",
+          );
+        },
+      ),
     );
   }
 }

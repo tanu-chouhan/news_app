@@ -1,50 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import '../../utils/app_color.dart';
-
 class ArticleScreen extends StatefulWidget {
-  String blogUrl;
-   ArticleScreen({required this.blogUrl});
+  final String blogUrl;
+
+  ArticleScreen({required this.blogUrl});
 
   @override
   State<ArticleScreen> createState() => _ArticleScreenState();
 }
 
 class _ArticleScreenState extends State<ArticleScreen> {
-
-  final controller = WebViewController();
+  late WebViewController controller;
 
   @override
   void initState() {
     super.initState();
-    controller.setJavaScriptMode(JavaScriptMode.unrestricted);
-    controller.loadRequest(Uri.parse(widget.blogUrl));
+    controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..loadRequest(Uri.parse(widget.blogUrl));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Row(
-          mainAxisAlignment: .center,
-          children: [
-            Text('Flutter'),
-            Text(
-              'News',
-              style: GoogleFonts.poppins(
-                fontWeight: .bold,
-                color: AppColors.primaryRed,
-              ),
-            ),
-          ],
-        ),
-      ),
-      body:Container(
-      child:WebViewWidget(controller: controller),
-    )
+      appBar: AppBar(title: Text("News")),
+      body: WebViewWidget(controller: controller),
     );
   }
 }
